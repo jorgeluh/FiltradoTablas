@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Prueba con jQuery</title>
+    </head>
+    <body>
+        <div>
+            Buscador <input type="text" id="buscador" /><button type="button" id="limpiar">Limpiar</button>
+        </div>
+        <div>
+            <table id="cuentas">
+                <thead>
+                    <tr>
+                        <td>Nombre</td>
+                        <td>Número</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="filaCuenta">
+                        <td class="nombre">Cuenta cero (0)</td>
+                        <td>0123456789</td>
+                    </tr>
+                    <tr class="filaCuenta">
+                        <td class="nombre">Cuenta uno (1)</td>
+                        <td>1234567890</td>
+                    </tr>
+                    <tr class="filaCuenta">
+                        <td class="nombre">Cuenta dos (2)</td>
+                        <td>2345678901</td>
+                    </tr>
+                    <tr class="filaCuenta">
+                        <td class="nombre">Cuenta tres (3)</td>
+                        <td>3456789012</td>
+                    </tr>
+                    <tr class="filaCuenta">
+                        <td class="nombre">Cuenta cuatro (4)</td>
+                        <td>4567890123</td>
+                    </tr>
+                    <tr class="filaCuenta">
+                        <td class="nombre">Cuenta cinco (5)</td>
+                        <td>5678901234</td>
+                    </tr>
+                    <tr class="filaCuenta">
+                        <td class="nombre">Cuenta seis (6)</td>
+                        <td>6789012345</td>
+                    </tr>
+                    <tr class="filaCuenta">
+                        <td class="nombre">Cuenta siete (7)</td>
+                        <td>7890123456</td>
+                    </tr>
+                    <tr class="filaCuenta">
+                        <td class="nombre">Cuenta ocho (8)</td>
+                        <td>8901234567</td>
+                    </tr>
+                    <tr class="filaCuenta">
+                        <td class="nombre">Cuenta nueve (9)</td>
+                        <td>9012345678</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            // Esto asocia los eventos del campo de texto y el botón sólo una vez, cuando la página termina de cargar.
+            $(document).ready(function() {
+                // Maneja el evento cuando se suelta cualquier tecla sobre el campo de texto del buscador.
+                $("#buscador").keyup(function() {
+                    // Se lee el texto del campo de texto del buscador.
+                    var texto = $(this).val();
+
+                    // Vuelve a mostrar todas las filas por si se van borrando caracteres del campo de texto y se deben mostrar más resultados.
+                    $(".filaCuenta").show();
+
+                    // Para cada elemento con la clase "nombre" (para identificar la columna sobre la que aplica el filtro).
+                    $(".nombre").each(function() {
+                        // Si el texto de la columna no contiene al texto buscado.
+                        if (!$(this).text().includes(texto)) {
+                            // Se busca al padre de la celda (la fila) y se oculta.
+                            $(this).parent().hide();
+                        }
+                    });
+                });
+
+                // Manejoa el evento de click en el botón de limpiar.
+                $("#limpiar").click(function() {
+                    // Limpia el campo de texto de búsqueda.
+                    $("#buscador").val("");
+
+                    // Vuelve a mostrar todas las filas de la tabla.
+                    $(".filaCuenta").show();
+                });
+            });
+        </script>
+    </body>
+</html>
