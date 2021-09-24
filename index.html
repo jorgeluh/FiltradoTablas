@@ -9,52 +9,84 @@
             Buscador <input type="text" id="buscador" /><button type="button" id="limpiar">Limpiar</button>
         </div>
         <div>
+            Búsqueda avanzada
+            <select id="avanzada">
+                <option value="todas">Todas</option>
+                <option value="Q">Quetzales</option>
+                <option value="USD">Dólares</option>
+                <option value="monetaria">Monetarias</option>
+                <option value="ahorros">Ahorros</option>
+            </select>
+        </div>
+        <div>
             <table id="cuentas">
                 <thead>
                     <tr>
                         <td>Nombre</td>
+                        <td>Moneda</td>
+                        <td>Tipo</td>
                         <td>Número</td>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="filaCuenta">
+                    <tr class="filaCuenta todas monetaria Q">
                         <td class="nombre">Cuenta cero (0)</td>
+                        <td>Q</td>
+                        <td>Monetaria</td>
                         <td>0123456789</td>
                     </tr>
-                    <tr class="filaCuenta">
+                    <tr class="filaCuenta todas monetaria Q">
                         <td class="nombre">Cuenta uno (1)</td>
+                        <td>Q</td>
+                        <td>Monetaria</td>
                         <td>1234567890</td>
                     </tr>
-                    <tr class="filaCuenta">
+                    <tr class="filaCuenta todas monetaria USD">
                         <td class="nombre">Cuenta dos (2)</td>
+                        <td>US$</td>
+                        <td>Monetaria</td>
                         <td>2345678901</td>
                     </tr>
-                    <tr class="filaCuenta">
+                    <tr class="filaCuenta todas monetaria USD">
                         <td class="nombre">Cuenta tres (3)</td>
+                        <td>US$</td>
+                        <td>Monetaria</td>
                         <td>3456789012</td>
                     </tr>
-                    <tr class="filaCuenta">
+                    <tr class="filaCuenta todas ahorros Q">
                         <td class="nombre">Cuenta cuatro (4)</td>
+                        <td>Q</td>
+                        <td>Ahorros</td>
                         <td>4567890123</td>
                     </tr>
-                    <tr class="filaCuenta">
+                    <tr class="filaCuenta todas ahorros Q">
                         <td class="nombre">Cuenta cinco (5)</td>
+                        <td>Q</td>
+                        <td>Ahorros</td>
                         <td>5678901234</td>
                     </tr>
-                    <tr class="filaCuenta">
+                    <tr class="filaCuenta todas ahorros USD">
                         <td class="nombre">Cuenta seis (6)</td>
+                        <td>UD$</td>
+                        <td>Ahorros</td>
                         <td>6789012345</td>
                     </tr>
-                    <tr class="filaCuenta">
+                    <tr class="filaCuenta todas ahorros USD">
                         <td class="nombre">Cuenta siete (7)</td>
+                        <td>UD$</td>
+                        <td>Ahorros</td>
                         <td>7890123456</td>
                     </tr>
-                    <tr class="filaCuenta">
+                    <tr class="filaCuenta todas monetaria Q">
                         <td class="nombre">Cuenta ocho (8)</td>
+                        <td>Q</td>
+                        <td>Monetaria</td>
                         <td>8901234567</td>
                     </tr>
-                    <tr class="filaCuenta">
+                    <tr class="filaCuenta todas monetaria USD">
                         <td class="nombre">Cuenta nueve (9)</td>
+                        <td>US$</td>
+                        <td>Monetaria</td>
                         <td>9012345678</td>
                     </tr>
                 </tbody>
@@ -64,22 +96,33 @@
         <script>
             // Esto asocia los eventos del campo de texto y el botón sólo una vez, cuando la página termina de cargar.
             $(document).ready(function() {
+                function aplicarFiltros(texto, filtro) {
+                    // Oculta todas las filas de la tabla para luego ir mostrando sólo las que cumplan las condiciones.
+                    $(".filaCuenta").hide();
+
+                    // Muestra todas las filas que tengan la clase que corresponda al valor seleccionado en la búsqueda avanzada.
+                    $("." + filtro).show();
+                    
+                    if (texto.length > 0) {
+                        // Para cada elemento con la clase "nombre" (para identificar la columna sobre la que aplica el filtro).
+                        $(".nombre").each(function() {
+                            // Si el texto de la columna no contiene al texto buscado.
+                            if (!$(this).text().includes(texto)) {
+                                // Se busca al padre de la celda (la fila) y se oculta.
+                                $(this).parent().hide();
+                            }
+                        });
+                    }
+                }
+
                 // Maneja el evento cuando se suelta cualquier tecla sobre el campo de texto del buscador.
                 $("#buscador").keyup(function() {
-                    // Se lee el texto del campo de texto del buscador.
-                    var texto = $(this).val();
+                    aplicarFiltros($(this).val(), $("#avanzada").val());
+                });
 
-                    // Vuelve a mostrar todas las filas por si se van borrando caracteres del campo de texto y se deben mostrar más resultados.
-                    $(".filaCuenta").show();
-
-                    // Para cada elemento con la clase "nombre" (para identificar la columna sobre la que aplica el filtro).
-                    $(".nombre").each(function() {
-                        // Si el texto de la columna no contiene al texto buscado.
-                        if (!$(this).text().includes(texto)) {
-                            // Se busca al padre de la celda (la fila) y se oculta.
-                            $(this).parent().hide();
-                        }
-                    });
+                // Maneja el evento de cambio de selección en la búsqueda avanzada.
+                $("#avanzada").change(function() {
+                    aplicarFiltros($("#buscador").val(), $(this).val());
                 });
 
                 // Maneja el evento de click en el botón de limpiar.
@@ -87,8 +130,10 @@
                     // Limpia el campo de texto de búsqueda.
                     $("#buscador").val("");
 
-                    // Vuelve a mostrar todas las filas de la tabla.
-                    $(".filaCuenta").show();
+                    // Reinicia la lista de selección avanzada.
+                    $("#avanzada").val("todas");
+
+                    aplicarFiltros($("#buscador").val(), $("#avanzada").val());
                 });
             });
         </script>
